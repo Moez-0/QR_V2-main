@@ -1,0 +1,7 @@
+@server_HostAddress = http://localhost:5215
+
+GET {{server_HostAddress}}/weatherforecast/
+Accept: application/json
+GET {{server_HostAddress}}/generate/
+Accept: application/json
+###
