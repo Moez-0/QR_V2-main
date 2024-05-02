@@ -26,6 +26,7 @@ namespace PDF2
 
        private readonly string barcodeType;
 
+
         [Obsolete]
         public Generate24PDF1(double paperWidthInMillimeters, double paperHeightInMillimeters,int nbRows,int nbColumns,int bottomMargin,int topMargin,int titleSize,bool titleBold,string titleAlign,string barcodeType, JArray dataArray)
         {
@@ -39,6 +40,7 @@ namespace PDF2
             this.titleBold = titleBold;
             this.titleAlign = titleAlign;
             this.barcodeType = barcodeType;
+
             QuestPDF.Settings.License = LicenseType.Community;
             FontManager.RegisterFont(File.OpenRead("./font/LibreBarcode39-Regular.ttf")); // use file name
             FontManager.RegisterFont(File.OpenRead("./font/LibreBarcode128-Regular.ttf"));
@@ -92,13 +94,15 @@ for (int i = 0; i < dataArray.Count; i++)
     // double barcodeFontSize = Math.Min(maxWidth / 8, maxHeight / 2); // Adjust according to your preference
 
     // Create a new grid item with the specified properties
-    grid.Item(4).Background(Colors.White).Border(1).BorderColor(Colors.Black)
+    grid.Item(12).Background(Colors.White).Border(1).BorderColor(Colors.Grey.Lighten1)
     //.Width((float)(itemWidth - 2)) // Subtracting margin from width
-    .Height(90/4) // Height of the item
+    .Height(90/3) // Height of the item
+
     .Padding(1) // Padding within the item (if needed)
     .AlignCenter() // Align the content to the center
     .Text(text =>
     {
+
         if (titleBold){
         text.Line(title).Bold().FontSize(titleSize);
         }else{
@@ -116,9 +120,9 @@ for (int i = 0; i < dataArray.Count; i++)
 
         }
         if(barcodeType == "128"){
-        text.Line(code).FontFamily("Libre Barcode 128").FontSize(2); // Cast to float      
+        text.Line(code).FontFamily("Libre Barcode 128").FontSize(8); // Cast to float      
         }else{
-             text.Line(code).FontFamily("Libre Barcode 39").FontSize(2); // Cast to float   
+             text.Line(code).FontFamily("Libre Barcode 39").FontSize(8); // Cast to float   
         }  
         text.Line(code).FontSize(2); // Cast to float
     });

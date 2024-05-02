@@ -49,13 +49,13 @@ app.MapPost("/excelData", async (HttpRequest request) =>
        dataArray = (JArray)jsonData["dataArray"];
         if (type == "A5"){
             if (dataArray != null){
-             var pdf = new Generate65PDF1(210, 297,3,12,1,1,8,true,"center","128",dataArray);
+             var pdf = new Generate65PDF1(210, 297,4,12,1,1,5,true,"center","128",dataArray);
              }else{
                 return Results.BadRequest("Failed to read PDF file. Please try again later.");
              }
         }else{
             if (dataArray != null){
-                var pdf = new Generate24PDF1(37,70,2,10,1,1,8,true,"center","128",dataArray);
+                var pdf = new Generate24PDF1(37,70,3,12,1,1,8,true,"center","128",dataArray);
             }else{
                 return Results.BadRequest("Failed to read PDF file. Please try again later.");
             }

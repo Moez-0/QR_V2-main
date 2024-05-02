@@ -25,6 +25,8 @@ namespace PDF1
         private readonly string titleAlign;
         private readonly string barcodeType;
 
+
+
         [Obsolete]
         public Generate65PDF1(double paperWidthInMillimeters, double paperHeightInMillimeters,int nbRows,int nbColumns,int bottomMargin,int topMargin,int titleSize,bool titleBold,string titleAlign,string barcodeType, JArray dataArray)
         {
@@ -96,7 +98,8 @@ for (int i = 0; i < dataArray.Count; i++)
     // Create a new grid item with the specified properties
     grid.Item(3).Background(Colors.White).Border(1).BorderColor(Colors.Black)
     //.Width((float)(itemWidth - 2)) // Subtracting margin from width
-    .Height(90) // Height of the item
+    .Height(90) // Height of the item7
+
     .Padding(1) // Padding within the item (if needed)
     .AlignCenter() // Align the content to the center
     .Text(text =>

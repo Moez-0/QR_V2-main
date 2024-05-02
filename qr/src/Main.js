@@ -9,9 +9,9 @@ import Spreadsheet from './components/Spreadsheet';
 const Main = () => {
     const [formData,setFormData] = useState({ paperWidth: 210 , paperHeight:297 , labelWidth: 70, labelHeight: 50, nbCols: 4, nbRows: 4, pageTopMargin: 1, pageBottomMargin: 1, pageLeftMargin: 1, pageRightMargin: 1});
     const [paper, setPaper] = useState('paper1');
-    const [selectedOption, setSelectedOption] = useState('A4');
+    const [selectedOption, setSelectedOption] = useState('A5');
     const [pdfArray,setPdfArray] = useState();
-    const [titleSize,setTitleSize] = useState(2);
+    const [titleSize,setTitleSize] = useState(5);
     const [titleBold,setTitleBold] = useState(true);
     const [titleAlign,setTitleAlign] = useState('center');
     const [barcodeType,setBarcodeType] = useState('128');
@@ -43,6 +43,7 @@ const Main = () => {
 
 
     const togglePaper = (event) => {
+        event.preventDefault(); //
         const newPaper = event.target.value;
         setPaper(newPaper);
     };
@@ -76,7 +77,7 @@ const Main = () => {
         };
     
         try {
-            console.log(selectedOption);
+            
             const fetchResponse = await fetch(`http://localhost:5215/params?paperWidth=${paperWidth}&paperHeight=${paperHeight}&nbRows=${nbRows}&nbCols=${nbCols}&pageBottomMargin=${bottomMargin}&pageTopMargin=${topMargin}&type=${selectedOption}&titleAlign=${titleAlign}&titleSize=${titleSize}&titleBold=${titleBold}&barcodeType=${barcodeType}`, settings);
             // Handle response as needed
            
@@ -84,6 +85,7 @@ const Main = () => {
             //console.log("setted");
             setPdfArray(bufferArray);
 
+            setSelectedOption(selectedOption);
         } catch (e) {
             console.error(e);
         }    
@@ -104,10 +106,13 @@ const Main = () => {
         return false;
       };
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        //console.log(formData);
-      }
+      useEffect(() => {
+        console.log(barcodeType);
+        // Execute handlePrint whenever titleBold, titleSize, or titleAlign changes
+        handlePrint();
+    
+    }, [titleBold, titleSize, titleAlign,barcodeType,formData,selectedOption]);
+
     let content = null;
 
     if (paper === 'paper1') {
@@ -262,11 +267,6 @@ const Main = () => {
         content = null;
     }
     
-    useEffect(() => {
-        console.log(barcodeType);
-        // Execute handlePrint whenever titleBold, titleSize, or titleAlign changes
-        handlePrint();
-    }, [titleBold, titleSize, titleAlign,formData,barcodeType]);
 
 
     return <>
@@ -354,13 +354,22 @@ const Main = () => {
                     <Spreadsheet type={selectedOption} />
                   </div>
                   <div className='w-full'>
-                    <button className='ml-40 mb-10 mt-17 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded w-32' onClick={()=> printIframe('pdf')} style={{ backgroundColor: '#4F67FF' , transition: 'background-color 0.3s'}}>Print</button>
-                </div>
+                  <button 
+    className='ml-40 mb-10 mt-17 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded w-32' 
+    onClick={(e) => { 
+        printIframe('pdf');
+        e.preventDefault(); // Prevent default button behavior
+    }} 
+    style={{ backgroundColor: '#4F67FF', transition: 'background-color 0.3s'}}
+>
+    Print
+</button>                </div>
                 
                 </div>
                 </div>
     
                 <div className='left bg-[#525659] w-full h-[80%] md:h-full md:w-[70%] w-full'>
+                
                 <ViewPDF selectedOption={selectedOption} bufferArray={pdfArray} />
                 </div>
                 
