@@ -49,13 +49,13 @@ app.MapPost("/excelData", async (HttpRequest request) =>
        dataArray = (JArray)jsonData["dataArray"];
         if (type == "A5"){
             if (dataArray != null){
-             var pdf = new Generate65PDF1(210, 297,4,12,1,1,5,true,"center","128",dataArray);
+             var pdf = new Generate65PDF1(210, 297,4,12,1,1,5,true,"center","128","barcodeSimple",dataArray);
              }else{
                 return Results.BadRequest("Failed to read PDF file. Please try again later.");
              }
         }else{
             if (dataArray != null){
-                var pdf = new Generate24PDF1(37,70,3,12,1,1,8,true,"center","128",dataArray);
+                var pdf = new Generate24PDF1(37,70,3,12,1,1,8,true,"center","128","barcodeSimple",dataArray);
             }else{
                 return Results.BadRequest("Failed to read PDF file. Please try again later.");
             }
@@ -69,9 +69,9 @@ app.MapPost("/excelData", async (HttpRequest request) =>
 .WithName("ExcelData")
 .WithOpenApi();
 
-app.MapPost("/params", (string paperWidth, string paperHeight,string nbRows,string nbCols,string pageTopMargin,string pageBottomMargin,string type,string titleAlign,string titleSize,string titleBold,string barcodeType) =>
+app.MapPost("/params", (string paperWidth, string paperHeight,string nbRows,string nbCols,string pageTopMargin,string pageBottomMargin,string type,string titleAlign,string titleSize,string titleBold,string barcodeType,string design) =>
 {
-    Console.WriteLine("{0} {1}", paperHeight, paperWidth);
+   Console.WriteLine(design);
     
     // Convert paperWidth and paperHeight to integers
     int width = Convert.ToInt32(paperWidth);
@@ -83,12 +83,13 @@ app.MapPost("/params", (string paperWidth, string paperHeight,string nbRows,stri
     int tSize = Convert.ToInt32(titleSize);
     bool tBold = Convert.ToBoolean(titleBold);
     string tAlign = titleAlign;
+
     
     var filePath = "";
     if(type == "A5"){
     // Generate PDF with the specified width and height
         if(dataArray != null){
-            var pdf = new Generate65PDF1(width, height,rows,cols,bottomMargin,topMargin,tSize,tBold,tAlign,barcodeType,dataArray);
+            var pdf = new Generate65PDF1(width, height,rows,cols,bottomMargin,topMargin,tSize,tBold,tAlign,barcodeType,design,dataArray);
     
         }else{
             return Results.BadRequest("Failed to read PDF file. Please try again later.");
@@ -96,7 +97,7 @@ app.MapPost("/params", (string paperWidth, string paperHeight,string nbRows,stri
         filePath = "65pdf.pdf"; // Path to the generated PDF file
     }else{
         if(dataArray!=null){
-            var pdf = new Generate24PDF1(width,height,3,12,bottomMargin,topMargin,tSize,tBold,tAlign,barcodeType,dataArray);
+            var pdf = new Generate24PDF1(width,height,3,12,bottomMargin,topMargin,tSize,tBold,tAlign,barcodeType,design,dataArray);
         }else{
             return Results.BadRequest("Failed to read PDF file. Please try again later.");
         }

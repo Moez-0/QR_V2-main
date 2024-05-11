@@ -15,7 +15,13 @@ const Main = () => {
     const [titleBold,setTitleBold] = useState(true);
     const [titleAlign,setTitleAlign] = useState('center');
     const [barcodeType,setBarcodeType] = useState('128');
-
+    const [labelDesign,setLabelDesign] = useState("barcodeSimple");
+    
+    // Function to handle when a label design is clicked
+    const handleLabelDesignClick = (design) => {
+        setLabelDesign(design);
+  
+    };
     useEffect(() => {
         // Define default values based on selected option
         const defaultValues = {
@@ -78,7 +84,7 @@ const Main = () => {
     
         try {
             
-            const fetchResponse = await fetch(`http://localhost:5215/params?paperWidth=${paperWidth}&paperHeight=${paperHeight}&nbRows=${nbRows}&nbCols=${nbCols}&pageBottomMargin=${bottomMargin}&pageTopMargin=${topMargin}&type=${selectedOption}&titleAlign=${titleAlign}&titleSize=${titleSize}&titleBold=${titleBold}&barcodeType=${barcodeType}`, settings);
+            const fetchResponse = await fetch(`http://localhost:5215/params?paperWidth=${paperWidth}&paperHeight=${paperHeight}&nbRows=${nbRows}&nbCols=${nbCols}&pageBottomMargin=${bottomMargin}&pageTopMargin=${topMargin}&type=${selectedOption}&titleAlign=${titleAlign}&titleSize=${titleSize}&titleBold=${titleBold}&barcodeType=${barcodeType}&design=${labelDesign}`, settings);
             // Handle response as needed
            
             let bufferArray = await fetchResponse.arrayBuffer();
@@ -111,7 +117,7 @@ const Main = () => {
         // Execute handlePrint whenever titleBold, titleSize, or titleAlign changes
         handlePrint();
     
-    }, [titleBold, titleSize, titleAlign,barcodeType,formData,selectedOption]);
+    }, [titleBold, titleSize, titleAlign,barcodeType,formData,selectedOption,labelDesign]);
 
     let content = null;
 
@@ -300,11 +306,34 @@ const Main = () => {
                 <form className='mx-10 mt-5'>
    <section className="snap-x snap-mandatory pretty-scrollbar pb-[10px] flex gap-[10px] overflow-x-auto overscroll-contain" role="radiogroup">
       <h3 className="hidden">List of Label Design</h3>
-      <div className="relative snap-start snap-always h-[120px] flex-none cursor-pointer overflow-hidden rounded-[8px] border-2 border-solid border-gray-4  z-0" role="radio" aria-label="Design : barcodeSimple"><img src="../s1.png"  alt="preview" width="226.77165354599998" height="113.38582677299999" decoding="async" data-nimg="1" className="h-full w-full object-cover z-0  " /></div>
-      <div className="relative snap-start snap-always h-[120px] flex-none cursor-pointer overflow-hidden rounded-[8px] border-2 border-solid border-gray-4 z-0"  role="radio" aria-label="Design : qrSimple"><img alt="preview" width="188.976377955" height="188.976377955" decoding="async" data-nimg="1" className="h-full w-full object-cover z-0" src="../s2.png" /></div>
-      <div className="relative snap-start snap-always h-[120px] flex-none cursor-pointer overflow-hidden rounded-[8px] border-2 border-solid border-gray-4 z-0"  role="radio" aria-label="Design : qrHorizontal"><img alt="preview" width="226.77165354599998" height="132.2834645685" decoding="async" data-nimg="1" className="h-full w-full object-cover z-0" src="../s3.png" /></div>
-      <div className="relative snap-start snap-always h-[120px] flex-none cursor-pointer overflow-hidden rounded-[8px] border-2 border-solid border-gray-4 z-0" role="radio" aria-label="Design : textOnly"><img alt="preview" width="226.77165354599998" height="113.38582677299999" decoding="async" data-nimg="1" className="h-full w-full object-cover z-0" src="../s4.png"/></div>
-   </section>
+      <div
+                className={`relative snap-start snap-always h-[120px] flex-none cursor-pointer overflow-hidden rounded-[8px] border-2 border-solid ${labelDesign === 'barcodeSimple' ? 'border-blue-500' : 'border-gray-400'} z-0`}
+                onClick={() => handleLabelDesignClick('barcodeSimple')}
+            >
+                 <img src="../s1.png" alt="preview" width="226.77165354599998" height="113.38582677299999" decoding="async" data-nimg="1" className="h-full w-full object-cover z-0" />
+            </div>
+            <div
+                className={`relative snap-start snap-always h-[120px] flex-none cursor-pointer overflow-hidden rounded-[8px] border-2 border-solid ${labelDesign === 'qrSimple' ? 'border-blue-500' : 'border-gray-400'} z-0`}
+                onClick={() => handleLabelDesignClick('qrSimple')}
+            >
+                  <img alt="preview" width="188.976377955" height="188.976377955" decoding="async" data-nimg="1" className="h-full w-full object-cover z-0" src="../s2.png" />
+
+            </div>
+            <div
+                className={`relative snap-start snap-always h-[120px] flex-none cursor-pointer overflow-hidden rounded-[8px] border-2 border-solid ${labelDesign === 'qrHorizontal' ? 'border-blue-500' : 'border-gray-400'} z-0`}
+                onClick={() => handleLabelDesignClick('qrHorizontal')}
+            >
+                    <img alt="preview" width="226.77165354599998" height="132.2834645685" decoding="async" data-nimg="1" className="h-full w-full object-cover z-0" src="../s3.png" />
+
+            </div>
+            <div
+                className={`relative snap-start snap-always h-[120px] flex-none cursor-pointer overflow-hidden rounded-[8px] border-2 border-solid ${labelDesign === 'textOnly' ? 'border-blue-500' : 'border-gray-400'} z-0`}
+                onClick={() => handleLabelDesignClick('textOnly')}
+            >
+                    <img alt="preview" width="226.77165354599998" height="113.38582677299999" decoding="async" data-nimg="1" className="h-full w-full object-cover z-0" src="../s4.png"/>
+
+            </div>
+      </section>
    
 </form> 
                 <div className='w-[90%] ml-5 flex justify-evenly flex-col pt-10'>

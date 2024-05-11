@@ -6,6 +6,8 @@ using Newtonsoft.Json.Linq;
 using System.Threading;
 
 using System;
+using System.ComponentModel;
+using DocumentFormat.OpenXml.Vml;
 
 namespace PDF1
 {
@@ -24,11 +26,13 @@ namespace PDF1
         private readonly bool titleBold;
         private readonly string titleAlign;
         private readonly string barcodeType;
+        
+        private readonly string labelDesign;
 
 
 
         [Obsolete]
-        public Generate65PDF1(double paperWidthInMillimeters, double paperHeightInMillimeters,int nbRows,int nbColumns,int bottomMargin,int topMargin,int titleSize,bool titleBold,string titleAlign,string barcodeType, JArray dataArray)
+        public Generate65PDF1(double paperWidthInMillimeters, double paperHeightInMillimeters,int nbRows,int nbColumns,int bottomMargin,int topMargin,int titleSize,bool titleBold,string titleAlign,string barcodeType,string labelDesign, JArray dataArray)
         {
             this.paperWidthInMillimeters = paperWidthInMillimeters;
             this.paperHeightInMillimeters = paperHeightInMillimeters;
@@ -40,11 +44,12 @@ namespace PDF1
             this.titleBold = titleBold;
             this.titleAlign = titleAlign;
              this.barcodeType = barcodeType;
-
+            this.labelDesign = labelDesign;
             
             QuestPDF.Settings.License = LicenseType.Community;
             FontManager.RegisterFont(File.OpenRead("./font/LibreBarcode39-Regular.ttf")); // use file name
             FontManager.RegisterFont(File.OpenRead("./font/LibreBarcode128-Regular.ttf"));
+            FontManager.RegisterFont(File.OpenRead("./font/QR.ttf"));
             try{
 RetryOnIOException(() =>
             {
@@ -94,23 +99,19 @@ for (int i = 0; i < dataArray.Count; i++)
     double titleFontSize = Math.Min(maxWidth / 10, maxHeight / 5); // Adjust according to your preference
     double descriptionFontSize = Math.Min(maxWidth / 15, maxHeight / 5); // Adjust according to your preference
     double barcodeFontSize = Math.Min(maxWidth / 8, maxHeight / 2); // Adjust according to your preference
+    
 
     // Create a new grid item with the specified properties
-    grid.Item(3).Background(Colors.White).Border(1).BorderColor(Colors.Black)
+    grid.Item(3).Background(Colors.White).Border(1).BorderColor(Colors.Grey.Lighten1)
     //.Width((float)(itemWidth - 2)) // Subtracting margin from width
     .Height(90) // Height of the item7
-
+    
     .Padding(1) // Padding within the item (if needed)
     .AlignCenter() // Align the content to the center
+    
     .Text(text =>
     {
-        text.EmptyLine();
-        if (titleBold){
-        text.Line(title).Bold().FontSize(titleSize);
-        }else{
-             text.Line(title).FontSize(titleSize);
-        }
-        if (titleAlign == "center"){
+         if (titleAlign == "center"){
         text.AlignCenter();
         }else{
             if (titleAlign == "right"){
@@ -121,15 +122,60 @@ for (int i = 0; i < dataArray.Count; i++)
             }
 
         }
+        if (labelDesign == "barcodeSimple"){
+        text.EmptyLine();
+        if (titleBold){
+        text.Line(title).Bold().FontSize(titleSize);
+        }else{
+             text.Line(title).FontSize(titleSize);
+        }
+
         text.EmptyLine();
         if(barcodeType == "128"){
         text.Line(code).FontFamily("Libre Barcode 128").FontSize(27).LineHeight(0.5f).LetterSpacing(-0.1f); // Cast to float   
         }else{
-            text.Line(code).FontFamily("Libre Barcode 39").FontSize(27).LineHeight(0.5f).LetterSpacing(-0.1f); // Cast to floa
+
+                text.Line(code).FontFamily("Libre Barcode 39").FontSize(27).LineHeight(0.5f).LetterSpacing(-0.1f); // Cast to floa
         }     
         text.Line(code).FontSize(8); // Cast to float
+        }else{
+            if(labelDesign == "qrSimple"){
+                 text.EmptyLine().LineHeight(0.5f);
+                 
+                text.Line(code[0].ToString()).FontFamily("Scan me QR").FontSize(50);
+                if (titleBold){
+                text.Line(title).Bold().FontSize(titleSize*2);
+                }else{
+                    text.Line(title).FontSize(titleSize*2);
+                }
+            }else{
+                if (labelDesign == "textOnly"){
+                    text.EmptyLine();
+                     text.EmptyLine();
+                           if (titleBold){
+                            text.Line(title).Bold().FontSize(titleSize*2);
+                            }else{
+                                text.Line(title).FontSize(titleSize*2);
+                            }
+
+                }else{
+text.EmptyLine().LineHeight(0.3f);
+                     text.Line(code[0].ToString()).FontFamily("Scan me QR").FontSize(50);
+                                if (titleBold){
+                            text.Line(title).Bold().FontSize(titleSize*2);
+                            }else{
+                                text.Line(title).FontSize(titleSize*2);
+                            }
+                            text.Line(description).FontSize(titleSize*2);
+        
+                
+                }
+            }
+        }
     }
+
     );
+    
         
 }
 

@@ -26,9 +26,9 @@ namespace PDF2
 
        private readonly string barcodeType;
 
-
+         private readonly string labelDesign;
         [Obsolete]
-        public Generate24PDF1(double paperWidthInMillimeters, double paperHeightInMillimeters,int nbRows,int nbColumns,int bottomMargin,int topMargin,int titleSize,bool titleBold,string titleAlign,string barcodeType, JArray dataArray)
+        public Generate24PDF1(double paperWidthInMillimeters, double paperHeightInMillimeters,int nbRows,int nbColumns,int bottomMargin,int topMargin,int titleSize,bool titleBold,string titleAlign,string barcodeType,string labelDesign, JArray dataArray)
         {
             this.paperWidthInMillimeters = paperWidthInMillimeters;
             this.paperHeightInMillimeters = paperHeightInMillimeters;
@@ -40,6 +40,7 @@ namespace PDF2
             this.titleBold = titleBold;
             this.titleAlign = titleAlign;
             this.barcodeType = barcodeType;
+             this.labelDesign = labelDesign;
 
             QuestPDF.Settings.License = LicenseType.Community;
             FontManager.RegisterFont(File.OpenRead("./font/LibreBarcode39-Regular.ttf")); // use file name
@@ -103,29 +104,69 @@ for (int i = 0; i < dataArray.Count; i++)
     .Text(text =>
     {
 
-        if (titleBold){
-        text.Line(title).Bold().FontSize(titleSize);
-        }else{
-             text.Line(title).FontSize(titleSize);
-        }
-        
         if (titleAlign == "center"){
         text.AlignCenter();
         }else{
             if (titleAlign == "right"){
-                text.AlignRight();
+                 text.AlignRight();
+                
             }else{
-                text.AlignLeft();
+               text.AlignLeft();
             }
 
         }
-        if(barcodeType == "128"){
-        text.Line(code).FontFamily("Libre Barcode 128").FontSize(8); // Cast to float      
+        if (labelDesign == "barcodeSimple"){
+            text.EmptyLine().LineHeight(0.2f);
+        if (titleBold){
+        text.Line(title).Bold().FontSize(3);
         }else{
-             text.Line(code).FontFamily("Libre Barcode 39").FontSize(8); // Cast to float   
-        }  
+             text.Line(title).FontSize(3);
+        }
+
+   
+        if(barcodeType == "128"){
+        text.Line(code).FontFamily("Libre Barcode 128").FontSize(12); // Cast to float   
+        }else{
+
+                text.Line(code).FontFamily("Libre Barcode 39").FontSize(12); // Cast to floa
+        }     
         text.Line(code).FontSize(2); // Cast to float
-    });
+        }else{
+            if(labelDesign == "qrSimple"){
+        text.EmptyLine().LineHeight(0.2f);
+                 
+                text.Line(code[0].ToString()).FontFamily("Scan me QR").FontSize(12);
+                if (titleBold){
+                text.Line(title).Bold().FontSize(3);
+                }else{
+                    text.Line(title).FontSize(3);
+                }
+            }else{
+                if (labelDesign == "textOnly"){
+    text.EmptyLine().LineHeight(0.3f);
+                           if (titleBold){
+                            text.Line(title).Bold().FontSize(6);
+                            }else{
+                                text.Line(title).FontSize(6);
+                            }
+
+                }else{
+                    text.EmptyLine().LineHeight(0.2f);
+
+                     text.Line(code[0].ToString()).FontFamily("Scan me QR").FontSize(12);
+                                if (titleBold){
+                            text.Line(title).Bold().FontSize(3);
+                            }else{
+                                text.Line(title).FontSize(3);
+                            }
+                            text.Line(description).FontSize(3);
+        
+                
+                }
+            }
+        }
+        }
+       );
 }
 
 
