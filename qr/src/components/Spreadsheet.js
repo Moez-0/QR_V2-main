@@ -142,7 +142,7 @@ const sendDataToServer = async () => {
   , [excelData]);
 
   return (
-    <div className="mt-5 w-full">
+    <div className="mt-5 w-full ">
       {/* view data */}
       <div className="viewer overflow-x-auto overflow-y-auto overscroll-contain pretty-scrollbar max-h-96">
         {excelData ? (

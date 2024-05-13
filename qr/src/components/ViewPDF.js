@@ -39,16 +39,16 @@ const ViewPDF = ({ selectedOption , bufferArray }) => {
     }, [selectedOption,bufferArray]);
 
     return (
-        <div className='h-screen'>
+        <div className='h-screen dark:bg-slate-900'>
             {/* Conditional rendering based on loading state */}
             {loading ? (
-                <div className="flex items-center justify-center h-full">
+                <div className="flex items-center justify-center h-full dark:bg-slate-900">
                     <div className="loader">
                         <DotLoader color='#4F67FF' />
                     </div> {/* Replace this with your loading animation */}
                 </div>
             ) : (
-                <iframe src={pdfUrl} width="100%" height="1000px" title="PDF Viewer" className="pdf border-none bg-transparent" id="pdf" />
+                <iframe src={pdfUrl} width="100%" height="1000px" title="PDF Viewer" className="pdf border-none bg-transparent" id="pdf" style={{ backgroundColor: 'lightgray' }} />
             )}
         </div>
     );

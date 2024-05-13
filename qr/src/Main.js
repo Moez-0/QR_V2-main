@@ -3,6 +3,7 @@ import PulseLoader from "react-spinners/PulseLoader";
 import { useState } from 'react';
 import Loader from './components/Loader';
 import ViewPDF from './components/ViewPDF';
+import Products from './components/global/Products';
 import Spreadsheet from './components/Spreadsheet';
 
 
@@ -16,7 +17,13 @@ const Main = () => {
     const [titleAlign,setTitleAlign] = useState('center');
     const [barcodeType,setBarcodeType] = useState('128');
     const [labelDesign,setLabelDesign] = useState("barcodeSimple");
-    
+    const [selectedExcelOrBdProducts, setSelectedExcelOrBdProducts] = useState('excel');
+
+    const handleExcelOrBdProducts = (event) => {
+        const newSelectedExcelOrBdProducts = event.target.value;
+        setSelectedExcelOrBdProducts(newSelectedExcelOrBdProducts);
+    }
+
     // Function to handle when a label design is clicked
     const handleLabelDesignClick = (design) => {
         setLabelDesign(design);
@@ -68,10 +75,12 @@ const Main = () => {
         const nbCols = formData["nbCols"];
         const topMargin = formData["pageTopMargin"];
         const bottomMargin = formData["pageBottomMargin"];
+        const leftMargin = formData["pageLeftMargin"];
+        const rightMargin = formData["pageRightMargin"];
         
         const fetchResponse = {};
         //console.log(nbCols);
-        if(paperHeight && paperWidth && nbRows && nbCols && topMargin && bottomMargin && titleAlign && titleBold != null && titleSize && barcodeType){
+        if(paperHeight && paperWidth && nbRows && nbCols && topMargin && bottomMargin && titleAlign && titleBold != null && titleSize && barcodeType && topMargin && leftMargin){
         const settings = {
             method: 'POST',
             headers: {
@@ -84,7 +93,7 @@ const Main = () => {
     
         try {
             
-            const fetchResponse = await fetch(`http://localhost:5215/params?paperWidth=${paperWidth}&paperHeight=${paperHeight}&nbRows=${nbRows}&nbCols=${nbCols}&pageBottomMargin=${bottomMargin}&pageTopMargin=${topMargin}&type=${selectedOption}&titleAlign=${titleAlign}&titleSize=${titleSize}&titleBold=${titleBold}&barcodeType=${barcodeType}&design=${labelDesign}`, settings);
+            const fetchResponse = await fetch(`http://localhost:5215/params?paperWidth=${paperWidth}&paperHeight=${paperHeight}&nbRows=${nbRows}&nbCols=${nbCols}&pageBottomMargin=${bottomMargin}&pageTopMargin=${topMargin}&pageLeftMargin=${leftMargin}&pageRightMargin=${rightMargin}&type=${selectedOption}&titleAlign=${titleAlign}&titleSize=${titleSize}&titleBold=${titleBold}&barcodeType=${barcodeType}&design=${labelDesign}`, settings);
             // Handle response as needed
            
             let bufferArray = await fetchResponse.arrayBuffer();
@@ -124,7 +133,7 @@ const Main = () => {
     if (paper === 'paper1') {
         
         content =  <div className='flex flex-row mr-5 w-full'>
-       <select className='border-2 border-black dark:border-white rounded-md p-1 w-full' value={selectedOption} onChange={handleOptionChange}>
+       <select className='border-2 border-black dark:border-white rounded-md p-1 w-full dark:bg-slate-800 dark:text-white' value={selectedOption} onChange={handleOptionChange}>
     {selectedOption === 'A4' ? (
         <>
             <option value="A4">A4/24</option>
@@ -141,9 +150,9 @@ const Main = () => {
     </div>
     }
     else if (paper === 'paper2') {
-        content = <div className='container m-auto grid grid-cols-2 gap-3 text-xs font-medium'>
+        content = <div className='container m-auto grid grid-cols-2 gap-3 text-xs font-medium dark:bg-gray-800'>
             
- <div className='flex justify-between items-center'>
+ <div className='flex justify-between items-center '>
         <label for="paperWidth">Width</label>
         <div className='flex flex-row justify-center items-center border border-gray-300 rounded-lg p-1.5'>
         <input className='  text-gray-900 text-sm rounded-lg outline-none block w-[50px] p-1.5 dark:bg-gray-700 ' type="number" id="paperWidth" name="paperWidth" />
@@ -154,7 +163,7 @@ const Main = () => {
         <label for="paperHeight">Height</label>
         <div className='flex flex-row justify-center items-center border border-gray-300 rounded-lg p-1'>
 
-        <input className='  text-gray-900 text-sm rounded-lg outline-none block w-[50px] p-1.5 dark:bg-gray-700 '  type="number" id="paperHeight" name="paperHeight" />
+        <input className='  text-gray-900 text-sm rounded-lg outline-none block w-[50px] p-1.5 dark:bg-slate-800 dark:text-white '  type="number" id="paperHeight" name="paperHeight" />
         <span className='ml-2 text-gray-400'>mm</span>
         </div>
         </div>
@@ -167,7 +176,7 @@ const Main = () => {
         <div className='flex justify-between items-center'>
         <label for="paperWidth">Paper Width</label>
         <div className='flex flex-row justify-center items-center border border-gray-300 rounded-lg p-1 '>
-        <input className='  text-gray-900 text-sm rounded-lg outline-none block w-[55px] py-1 px-1.5 dark:bg-gray-700 ' type="number" id="paperWidth" name="paperWidth" value={formData.paperWidth} onChange={handleChange}  min={0}
+        <input className='  text-gray-900 text-sm rounded-lg outline-none block w-[55px] py-1 px-1.5 dark:bg-slate-800 dark:text-white ' type="number" id="paperWidth" name="paperWidth" value={formData.paperWidth} onChange={handleChange}  min={0}
  step={1}
  onKeyDown={(e) => {
  if (e.code === 'Minus') {
@@ -181,7 +190,7 @@ const Main = () => {
         <label for="paperHeight">Paper Height</label>
         <div className='flex flex-row justify-center items-center border border-gray-300 rounded-lg p-1'>
 
-        <input className='  text-gray-900 text-sm rounded-lg outline-none block w-[55px] py-1 px-1.5 dark:bg-gray-700 '  type="number" id="paperHeight" name="paperHeight" value={formData.paperHeight}  onChange={handleChange}  min={0}
+        <input className='  text-gray-900 text-sm rounded-lg outline-none block w-[55px] py-1 px-1.5 dark:bg-slate-800 dark:text-white '  type="number" id="paperHeight" name="paperHeight" value={formData.paperHeight}  onChange={handleChange}  min={0}
  step={1}
  onKeyDown={(e) => {
  if (e.code === 'Minus') {
@@ -191,43 +200,21 @@ const Main = () => {
         <span className='ml-2 text-gray-400'>mm</span>
         </div>
         </div>
-        <div className='flex justify-between items-center '>
-        <label for="labelWidth">Label Width</label>
-        <div className='flex flex-row justify-center items-center border border-gray-300 rounded-lg p-1'>
-        <input className='  text-gray-900 text-sm rounded-lg outline-none block w-[55px] py-1 px-1.5 dark:bg-gray-700 '  type="number" id="paperWidth" name="labelWidth" value={formData.labelWidth} onChange={handleChange} />
-        <span className='ml-2 text-gray-400'>mm</span>
-        </div>
-        </div>
-        <div className='flex justify-between items-center '>
-        <label for="labelHeight">Label Height</label>
-        <div className='flex flex-row justify-center items-center border border-gray-300 rounded-lg p-1'>
 
-        <input className='  text-gray-900 text-sm rounded-lg outline-none block w-[55px] py-1 px-1.5 dark:bg-gray-700 '  type="number" id="paperWidth" name="labelHeight" value={formData.labelHeight} onChange={handleChange} />
-        <span className='ml-2 text-gray-400'>mm</span>
-        </div>
-        </div>
         <div className='flex justify-between items-center '>
         <label for="numberOfCols"># of columns</label>
         <div className='flex flex-row justify-center items-center border border-gray-300 rounded-lg p-1'>
 
-        <input className='  text-gray-900 text-sm rounded-lg outline-none block w-[55px] py-1 px-1.5 dark:bg-gray-700 '  type="number" id="paperWidth" name="nbCols" value={formData.nbCols} onChange={handleChange} />
+        <input className='  text-gray-900 text-sm rounded-lg outline-none block w-[55px] py-1 px-1.5 dark:bg-slate-800 dark:text-white'  type="number" id="paperWidth" name="nbCols" value={formData.nbCols} onChange={handleChange} />
         <span className='ml-2 opacity-0'>mm</span>
         </div>
         </div>
-        <div className='flex justify-between items-center '>
-            
-        <label for="numberOfRows"># of rows</label>
-        <div className='flex flex-row justify-center items-center border border-gray-300 rounded-lg p-1'>
-
-        <input className='  text-gray-900 text-sm rounded-lg outline-none block w-[55px] py-1 px-1.5 dark:bg-gray-700 '  type="number" id="paperWidth" name="nbRows" value={formData.nbRows} onChange={handleChange} />
-        <span className='ml-2 opacity-0'>mm</span>
-        </div>
-        </div>
+        
         <div className='flex justify-between items-center '>
         <label for="pageTopMargin">Page Top Margin</label>
         <div className='flex flex-row justify-center items-center border border-gray-300 rounded-lg p-1'>
 
-        <input className='  text-gray-900 text-sm rounded-lg outline-none block w-[55px] py-1 px-1.5 dark:bg-gray-700 '  type="number" id="paperWidth" name="pageTopMargin" value={formData.pageTopMargin} onChange={handleChange} />
+        <input className='  text-gray-900 text-sm rounded-lg outline-none block w-[55px] py-1 px-1.5 dark:bg-slate-800 dark:text-white '  type="number" id="paperWidth" name="pageTopMargin" value={formData.pageTopMargin} onChange={handleChange} />
         <span className='ml-2 text-gray-400'>mm</span>
         </div>
         </div>
@@ -237,7 +224,7 @@ const Main = () => {
         <div className='flex flex-row justify-center items-center border border-gray-300 rounded-lg p-1'>
 
 
-        <input className='  text-gray-900 text-sm rounded-lg outline-none block w-[55px] py-1 px-1.5 dark:bg-gray-700 '  type="number" id="paperWidth" name="pageBottomMargin" value={formData.pageBottomMargin} onChange={handleChange} />
+        <input className='  text-gray-900 text-sm rounded-lg outline-none block w-[55px] py-1 px-1.5 dark:bg-slate-800 dark:text-white '  type="number" id="paperWidth" name="pageBottomMargin" value={formData.pageBottomMargin} onChange={handleChange} />
         <span className='ml-2 text-gray-400'>mm</span>
         </div>
         </div>
@@ -245,7 +232,7 @@ const Main = () => {
         <label for="pageLeftMargin">Page Left Margin</label>
         <div className='flex flex-row justify-center items-center border border-gray-300 rounded-lg p-1'>
 
-        <input className='  text-gray-900 text-sm rounded-lg outline-none block w-[55px] py-1 px-1.5 dark:bg-gray-700 '  type="number" id="paperWidth" name="pageLeftMargin" value={formData.pageLeftMargin} onChange={handleChange}  />
+        <input className='  text-gray-900 text-sm rounded-lg outline-none block w-[55px] py-1 px-1.5 dark:bg-slate-800 dark:text-white'  type="number" id="paperWidth" name="pageLeftMargin" value={formData.pageLeftMargin} onChange={handleChange}  />
         <span className='ml-2 text-gray-400'>mm</span>
         </div>
         </div>
@@ -254,7 +241,7 @@ const Main = () => {
         <label for="pageRightMargin">Page Right Margin</label>
         <div className='flex flex-row justify-center items-center border border-gray-300 rounded-lg p-1'>
 
-        <input className='  text-gray-900 text-sm rounded-lg outline-none block w-[55px] py-1 px-1.5 dark:bg-gray-700 '  type="number" id="paperWidth" name="pageRightMargin" value={formData.pageRightMargin} onChange={handleChange} />
+        <input className='  text-gray-900 text-sm rounded-lg outline-none block w-[55px] py-1 px-1.5 dark:bg-slate-800 dark:text-white'  type="number" id="paperWidth" name="pageRightMargin" value={formData.pageRightMargin} onChange={handleChange} />
         <span className='ml-2 text-gray-400'>mm</span>
         
         </div>
@@ -279,7 +266,7 @@ const Main = () => {
     <Loader />
         <div className='mt-20 min-h-screen min-w-full h-full w-full bg-white dark:bg-slate-950 flex text-black dark:text-white flex-col justify-center items-center '>
                    
-            <div className='w-full bg-grayBg flex flex-col md:flex-row h-full'>
+            <div className='w-full  flex flex-col md:flex-row  min-h-[160vh] dark:bg-slate-800'>
                 <div className='rightt bg-white px-5  dark:bg-slate-800 w-full h-[20%] md:h-screen  md:h-full md:w-[30%] flex flex-col justify-between'>
                 <h1 className='text-lg font-bold text-black dark:text-white mt-10 ml-5 mb-5'>1. Types of Paper</h1>
                 <div className='w-[90%] ml-5 flex justify-between'>
@@ -295,7 +282,7 @@ const Main = () => {
                   </div>
                 </div>
 
-                <div className='paper w-[90%] ml-5 flex justify-between mt-5'>
+                <div className='paper w-[90%] ml-5 flex justify-between mt-5  '>
     
                     { content }
             
@@ -336,24 +323,25 @@ const Main = () => {
       </section>
    
 </form> 
-                <div className='w-[90%] ml-5 flex justify-evenly flex-col pt-10'>
-                <div className='flex flex-col'>
-                <h1 className='font-bold'>Text</h1>
-                    <div className='flex justify-evenly'>
-                        <div className='flex flex-row justify-center items-center border border-gray-300 rounded-lg p-1 w-24'>
-                        <input className='  text-gray-900 text-xs rounded-lg outline-none block w-[50px] py-1 px-1.5 dark:bg-gray-700 ' name="size"  value={titleSize} onChange={(e) => setTitleSize(parseInt(e.target.value))} type="number"  />
+                <div className='w-[90%] ml-5 flex justify-evenly flex-col pt-10 '>
+                <div className='flex flex-col justify-center ' >
+                
+                    <div className='flex justify-evenly items-center pr-26'>
+                    <h1 className='font-bold '>3. Text</h1>
+                        <div className='flex flex-row justify-center items-center border border-gray-300 rounded-lg p-1 w-28 ml-5'>
+                        <input className='  text-gray-900 text-xs rounded-lg outline-none block w-[50px] py-1 px-1.5 dark:bg-slate-800 dark:text-white ' name="size"  value={titleSize} onChange={(e) => setTitleSize(parseInt(e.target.value))} type="number"  />
                         <span className='ml-2 text-gray-400'  >pt</span>
                         
                         </div>
-                        <div className='flex items-center' >
-                        <button  onClick={() => setTitleBold(false)} name='bold' className={` border border-gray-300 rounded-lg p-2 rounded-r-none ${titleBold === false ? 'bg-gray-100' : ''} hover:bg-gray-100`}><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16"><path d="M10.792 10.876c0-.774-.281-1.352-.846-1.733-.563-.382-1.438-.572-2.623-.572H5.938v4.683h.86c.859 0 1.567-.051 2.121-.153.555-.103 1.005-.327 1.352-.67.348-.343.521-.862.521-1.555m-.687-6.15c0-.657-.24-1.151-.717-1.482-.479-.332-1.154-.498-2.027-.498H5.938v4.088h1.443c1.815 0 2.724-.702 2.724-2.108m2.15-.112c0 .657-.151 1.236-.449 1.737-.3.502-.737.886-1.31 1.152.81.279 1.429.713 1.858 1.306.431.59.646 1.293.646 2.104 0 1.332-.502 2.345-1.505 3.043C10.491 14.652 8.989 15 6.988 15H2v-1.747h1.777V2.746H2V1h5.065c1.752 0 3.055.298 3.909.891.854.595 1.281 1.502 1.281 2.723"></path></svg></button>
-                        <button  onClick={() => setTitleBold(true)} name='bold' className={` border border-gray-300 rounded-lg p-2 rounded-l-none ${titleBold === true ? 'bg-gray-100' : ''} hover:bg-gray-100`}><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16"><path d="M10.157 10.81c0-.68-.202-1.17-.606-1.468-.406-.297-1.102-.446-2.089-.446h-.947v3.726h1.472c.663 0 1.191-.146 1.582-.437.392-.29.588-.75.588-1.375m-.449-5.955c0-.545-.202-.927-.607-1.147-.405-.22-.973-.33-1.707-.33h-.879v3.16h1.157c.681 0 1.191-.128 1.529-.382.338-.254.507-.688.507-1.3m3.737-.187c0 1.357-.679 2.32-2.036 2.89.873.315 1.523.751 1.95 1.305.427.554.641 1.237.641 2.05C14 13.637 11.897 15 7.691 15H1v-2.378h1.778V3.378H1V1h6.691c1.944 0 3.389.304 4.335.911.946.607 1.419 1.526 1.419 2.758"></path></svg></button>
+                        <div className='flex items-center ml-5' >
+                        <button  onClick={() => setTitleBold(false)} name='bold' className={` border border-gray-300 rounded-lg p-2 rounded-r-none ${titleBold === false ? 'bg-gray-100' : ''} hover:bg-gray-100 dark:hover:bg-slate-600`}><svg className={`dark:fill-white  ${titleBold === false ? 'dark:fill-black' : ''}   `} xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16"><path d="M10.792 10.876c0-.774-.281-1.352-.846-1.733-.563-.382-1.438-.572-2.623-.572H5.938v4.683h.86c.859 0 1.567-.051 2.121-.153.555-.103 1.005-.327 1.352-.67.348-.343.521-.862.521-1.555m-.687-6.15c0-.657-.24-1.151-.717-1.482-.479-.332-1.154-.498-2.027-.498H5.938v4.088h1.443c1.815 0 2.724-.702 2.724-2.108m2.15-.112c0 .657-.151 1.236-.449 1.737-.3.502-.737.886-1.31 1.152.81.279 1.429.713 1.858 1.306.431.59.646 1.293.646 2.104 0 1.332-.502 2.345-1.505 3.043C10.491 14.652 8.989 15 6.988 15H2v-1.747h1.777V2.746H2V1h5.065c1.752 0 3.055.298 3.909.891.854.595 1.281 1.502 1.281 2.723"></path></svg></button>
+                        <button  onClick={() => setTitleBold(true)} name='bold' className={` border border-gray-300 rounded-lg p-2 rounded-l-none ${titleBold === true ? 'bg-gray-100' : ''} hover:bg-gray-100 dark:hover:bg-slate-600`}><svg className={`dark:fill-white  ${titleBold === true ? 'dark:fill-black' : ''}`}  xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16"><path d="M10.157 10.81c0-.68-.202-1.17-.606-1.468-.406-.297-1.102-.446-2.089-.446h-.947v3.726h1.472c.663 0 1.191-.146 1.582-.437.392-.29.588-.75.588-1.375m-.449-5.955c0-.545-.202-.927-.607-1.147-.405-.22-.973-.33-1.707-.33h-.879v3.16h1.157c.681 0 1.191-.128 1.529-.382.338-.254.507-.688.507-1.3m3.737-.187c0 1.357-.679 2.32-2.036 2.89.873.315 1.523.751 1.95 1.305.427.554.641 1.237.641 2.05C14 13.637 11.897 15 7.691 15H1v-2.378h1.778V3.378H1V1h6.691c1.944 0 3.389.304 4.335.911.946.607 1.419 1.526 1.419 2.758"></path></svg></button>
                         </div>
-                        <div className='flex items-center' >
+                        <div className='flex items-center ml-5' >
                         
-                        <button value="left" onClick={(e) => setTitleAlign('left')} name="align" className={`border border-gray-300 rounded-lg p-2 ${titleAlign === 'left' ? 'bg-gray-100' : ''}`}><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16"><path d="M14.25 4.5H1.75a.75.75 0 0 1 0-1.5h12.5a.75.75 0 0 1 0 1.5m-8 4.25h-4.5a.75.75 0 0 1 0-1.5h4.5a.75.75 0 0 1 0 1.5m4 4.25h-8.5a.75.75 0 0 1 0-1.5h8.5a.75.75 0 0 1 0 1.5"></path></svg></button>
-                        <button value="center" onClick={(e) => setTitleAlign('center')} name="align" className={`border border-gray-300 rounded-lg p-2 ${titleAlign === 'center' ? 'bg-gray-100' : ''}`}><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16"><path d="M14.25 4.5H1.75a.75.75 0 0 1 0-1.5h12.5a.75.75 0 0 1 0 1.5m-4 4.25h-4.5a.75.75 0 0 1 0-1.5h4.5a.75.75 0 0 1 0 1.5m2 4.25h-8.5a.75.75 0 0 1 0-1.5h8.5a.75.75 0 0 1 0 1.5"></path></svg></button>
-                        <button  value="right"  onClick={(e) => setTitleAlign('right')} name="align" className={`border border-gray-300 rounded-lg p-2 ${titleAlign === 'right' ? 'bg-gray-100' : ''}`}><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16"><path d="M14.25 4.5H1.75a.75.75 0 0 1 0-1.5h12.5a.75.75 0 0 1 0 1.5m0 4.25h-4.5a.75.75 0 0 1 0-1.5h4.5a.75.75 0 0 1 0 1.5m0 4.25h-8.5a.75.75 0 0 1 0-1.5h8.5a.75.75 0 0 1 0 1.5"></path></svg></button>
+                        <button value="left" onClick={(e) => setTitleAlign('left')} name="align" className={`border border-gray-300 rounded-lg p-2 rounded-r-none ${titleAlign === 'left' ? 'bg-gray-100' : ''} dark:hover:bg-slate-600`}><svg className={`dark:fill-white  ${titleAlign === 'left' ? 'dark:fill-black' : ''}   `} xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16"><path d="M14.25 4.5H1.75a.75.75 0 0 1 0-1.5h12.5a.75.75 0 0 1 0 1.5m-8 4.25h-4.5a.75.75 0 0 1 0-1.5h4.5a.75.75 0 0 1 0 1.5m4 4.25h-8.5a.75.75 0 0 1 0-1.5h8.5a.75.75 0 0 1 0 1.5"></path></svg></button>
+                        <button value="center" onClick={(e) => setTitleAlign('center')} name="align" className={`border border-gray-300 rounded-lg p-2 rounded-l-none rounded-r-none  ${titleAlign === 'center' ? 'bg-gray-100' : ''} dark:hover:bg-slate-600`}><svg className={`dark:fill-white  ${titleAlign === 'center' ? 'dark:fill-black' : ''}   `} xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16"><path d="M14.25 4.5H1.75a.75.75 0 0 1 0-1.5h12.5a.75.75 0 0 1 0 1.5m-4 4.25h-4.5a.75.75 0 0 1 0-1.5h4.5a.75.75 0 0 1 0 1.5m2 4.25h-8.5a.75.75 0 0 1 0-1.5h8.5a.75.75 0 0 1 0 1.5"></path></svg></button>
+                        <button  value="right"  onClick={(e) => setTitleAlign('right')} name="align" className={`border border-gray-300 rounded-lg p-2 rounded-l-none ${titleAlign === 'right' ? 'bg-gray-100' : ''} dark:hover:bg-slate-600`}><svg className={`dark:fill-white  ${titleAlign === 'right' ? 'dark:fill-black' : ''}   `}  xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16"><path d="M14.25 4.5H1.75a.75.75 0 0 1 0-1.5h12.5a.75.75 0 0 1 0 1.5m0 4.25h-4.5a.75.75 0 0 1 0-1.5h4.5a.75.75 0 0 1 0 1.5m0 4.25h-8.5a.75.75 0 0 1 0-1.5h8.5a.75.75 0 0 1 0 1.5"></path></svg></button>
                         </div>
                     </div>
 
@@ -361,11 +349,13 @@ const Main = () => {
                 </div>
                 <hr className='my-5'/>
 
-                 <div className='flex flex-col'>
-                <h1 className='font-bold'>Barcode</h1>
-                    <div className='flex justify-evenly items-start'>
+                 <div className='flex flex-col dark:bg-slate-800 '>
+                
+                    <div className='flex items-center mr-5'>
+                    <h1 className='font-bold'>Barcode</h1>
                     <div className='flex flex-row mr-5 w-full'>
-       <select onChange={(e)=>{setBarcodeType(e.target.value)}} className='border-2 border-black dark:border-white rounded-md p-1 w-full' >
+                        
+       <select onChange={(e)=>{setBarcodeType(e.target.value)}} className='border-2 border-black dark:border-white rounded-md p-1 ml-5 dark:bg-slate-800 dark:outline-none' >
    
             <option value="128">Barcode 128</option>
             <option value="39">Barcode 39</option>
@@ -379,27 +369,40 @@ const Main = () => {
                 </div> 
                 <hr className='my-5'/>
                   </div>
-                  <div className='w-[90%] ml-5 flex justify-between flex-col pt-10'>
-                    <Spreadsheet type={selectedOption} />
+
+         
+                <h1 className='text-lg font-bold text-black dark:text-white mt-10 ml-5'>4. Data</h1>
+               
+                <div className='flex flex-row mr-5 w-full dark:bg-slate-800 '>
+                <button className=' mb-10 ml-5  mt-5 hover:bg-gray-700 text-white font-bold py-2 px-2 rounded w-32' style={{ backgroundColor: '#4F67FF' , transition: 'background-color 0.3s'}} onClick={handlePrint}>Refresh Data</button>
+                </div>
+                <select className='border-2 border-black dark:border-white rounded-md p-1 w-full outline-none ml-5 w-[50%] mt-5 dark:bg-slate-800 dark:outline-none' value={selectedExcelOrBdProducts} onChange={handleExcelOrBdProducts}>
+                    <option value="excel">Excel</option>
+                    <option value="bd">Database</option>
+
+                </select>
+                  <div className='w-[90%] ml-5 flex justify-between flex-col pt-10 '>
+                    {selectedExcelOrBdProducts === 'excel' ? <Spreadsheet type={selectedOption} /> : <Products type={selectedOption}  />} 
+
                   </div>
-                  <div className='w-full'>
+                  <div className='w-full '>
                   <button 
-    className='ml-40 mb-10 mt-17 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded w-32' 
-    onClick={(e) => { 
-        printIframe('pdf');
-        e.preventDefault(); // Prevent default button behavior
-    }} 
-    style={{ backgroundColor: '#4F67FF', transition: 'background-color 0.3s'}}
->
-    Print
-</button>                </div>
-                
+                    className='ml-40 mb-10 mt-17 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded w-32' 
+                    onClick={(e) => { 
+                        printIframe('pdf');
+                        e.preventDefault(); // Prevent default button behavior
+                    }} 
+                    style={{ backgroundColor: '#4F67FF', transition: 'background-color 0.3s'}}
+                >
+                    Print
+                </button>                
+                    </div>
+                    </div>
                 </div>
-                </div>
-    
-                <div className='left bg-[#525659] w-full h-[80%] md:h-full md:w-[70%] w-full'>
+              
+                <div className='left bg-[#525659] w-full h-[80%] md:h-full md:w-[70%] w-full dark:bg-gray-800'>
                 
-                <ViewPDF selectedOption={selectedOption} bufferArray={pdfArray} />
+                    <ViewPDF selectedOption={selectedOption} bufferArray={pdfArray} />
                 </div>
                 
             </div>

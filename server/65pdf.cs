@@ -21,7 +21,10 @@ namespace PDF1
         private readonly int nbColumns;
         private readonly int bottomMargin;
         private readonly int topMargin;
-        //,tSize,tBold,tAlig
+        
+        private readonly int leftMargin;
+
+        private readonly int rightMargin;
         private readonly int titleSize;
         private readonly bool titleBold;
         private readonly string titleAlign;
@@ -32,7 +35,7 @@ namespace PDF1
 
 
         [Obsolete]
-        public Generate65PDF1(double paperWidthInMillimeters, double paperHeightInMillimeters,int nbRows,int nbColumns,int bottomMargin,int topMargin,int titleSize,bool titleBold,string titleAlign,string barcodeType,string labelDesign, JArray dataArray)
+        public Generate65PDF1(double paperWidthInMillimeters, double paperHeightInMillimeters,int nbRows,int nbColumns,int bottomMargin,int topMargin,int leftMargin,int rightMargin,int titleSize,bool titleBold,string titleAlign,string barcodeType,string labelDesign, JArray dataArray)
         {
             this.paperWidthInMillimeters = paperWidthInMillimeters;
             this.paperHeightInMillimeters = paperHeightInMillimeters;
@@ -40,6 +43,8 @@ namespace PDF1
             this.nbColumns = nbColumns;
             this.bottomMargin = bottomMargin;
             this.topMargin = topMargin;
+            this.leftMargin = leftMargin;
+            this.rightMargin = rightMargin;
             this.titleSize = titleSize;
             this.titleBold = titleBold;
             this.titleAlign = titleAlign;
@@ -63,6 +68,8 @@ RetryOnIOException(() =>
                     page.Margin(5);
                     page.MarginTop(topMargin);
                     page.MarginBottom(bottomMargin);
+                    page.MarginLeft(leftMargin);
+                    page.MarginRight(rightMargin);
                     double paperWidthInPoints = paperWidthInMillimeters * 2.83465; // Convert mm to points
                     double paperHeightInPoints = paperHeightInMillimeters * 2.83465; // Convert mm to points
                     float pageWidthInPoints = (float)(paperWidthInPoints);
