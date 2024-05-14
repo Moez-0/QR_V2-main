@@ -1,16 +1,30 @@
 import React from 'react';
-import { useState } from 'react';
+import { useState ,useEffect } from 'react';
 import { Link , useNavigate } from "react-router-dom";
 import axios from 'axios';
 
 const Login = () => {
+  const [isLoggedIn, setIsLoggedIn] = useState(false); // State to track authentication status
+  const navigate = useNavigate()
+  useEffect(() => {
+    // Check if user is authenticated (e.g., by checking for token in local storage)
+    const token = localStorage.getItem('token');
+    if (token) {
+	navigate('/')
+        setIsLoggedIn(true);
+    } else {
+      setIsLoggedIn(false);
+    }
+
+}
+    , []);  
   const [formData,setFormData] = useState({
     username:'',
     password:''
   })
   const [error,setError] = useState("");
 
-  const navigate = useNavigate()
+
 
   const handleChange = (e) => {
     setFormData({

@@ -6638,26 +6638,24 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\Med Anas\\.nuget\\packages\\": {}
+    "C:\\Users\\Moez\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\react\\QR_V2-main\\server\\server.csproj",
+      "projectUniqueName": "D:\\Anas\\PFE\\boxup\\server\\server.csproj",
       "projectName": "server",
-      "projectPath": "C:\\react\\QR_V2-main\\server\\server.csproj",
-      "packagesPath": "C:\\Users\\Med Anas\\.nuget\\packages\\",
-      "outputPath": "C:\\react\\QR_V2-main\\server\\obj\\",
+      "projectPath": "D:\\Anas\\PFE\\boxup\\server\\server.csproj",
+      "packagesPath": "C:\\Users\\Moez\\.nuget\\packages\\",
+      "outputPath": "D:\\Anas\\PFE\\boxup\\server\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\Med Anas\\AppData\\Roaming\\NuGet\\NuGet.Config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        "C:\\Users\\Moez\\AppData\\Roaming\\NuGet\\NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net8.0"
       ],
       "sources": {
-        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {

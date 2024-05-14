@@ -59,7 +59,10 @@ const Navbar = () => {
 
                 
                     {isLoggedIn ? (
-                        <Link to='/edit-profile' className='px-4 py-2 rounded-md text-white bg-blue-500 hover:bg-blue-600 focus:outline-none'>Edit Profile</Link>
+                        <Link to='/edit-profile' className='px-4 py-2  rounded-md text-white bg-blue-500 hover:bg-blue-600 focus:outline-none'>Edit Profile</Link>
+                    ) : null}
+			{isLoggedIn ? (
+                        <Link to='/generate' className='px-4 py-2 ml-5 rounded-md text-white bg-blue-500 hover:bg-blue-600 focus:outline-none'>Generate</Link>
                     ) : null}
                 </div>
                 <div className='md:hidden'>

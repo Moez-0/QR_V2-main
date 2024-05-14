@@ -376,7 +376,7 @@ const Main = () => {
                 <div className='flex flex-row mr-5 w-full dark:bg-slate-800 '>
                 <button className=' mb-10 ml-5  mt-5 hover:bg-gray-700 text-white font-bold py-2 px-2 rounded w-32' style={{ backgroundColor: '#4F67FF' , transition: 'background-color 0.3s'}} onClick={handlePrint}>Refresh Data</button>
                 </div>
-                <select className='border-2 border-black dark:border-white rounded-md p-1 w-full outline-none ml-5 w-[50%] mt-5 dark:bg-slate-800 dark:outline-none' value={selectedExcelOrBdProducts} onChange={handleExcelOrBdProducts}>
+                <select className='border-2 border-black dark:border-white rounded-md p-1 w-full outline-none ml-5 w-[30%] mt-5 dark:bg-slate-800 dark:outline-none' value={selectedExcelOrBdProducts} onChange={handleExcelOrBdProducts}>
                     <option value="excel">Excel</option>
                     <option value="bd">Database</option>
 
