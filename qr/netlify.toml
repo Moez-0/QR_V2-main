@@ -1,7 +1,7 @@
 [build]
-  command = "CI='' npm run build"
+  command = "CI=false && react-scripts build"
   publish = "/build"
-  base ="/"
+  base ="."
 
 [[redirects]]
   from = "/*"
